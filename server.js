@@ -1,17 +1,24 @@
-function requireHTTPS(req, res, next) {
-  // The 'x-forwarded-proto' check is for Heroku
-  if (!req.secure && req.get('x-forwarded-proto') !== 'https') {
-      return res.redirect('https://' + req.get('host') + req.url);
-  }
-  next();
-}
 const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
 const app = express();
-app.use(requireHTTPS);
+
+const forceSSL = function () {
+  return function (req, res, next) {
+    if (req.headers['x-forwarded-proto'] !== 'https') {
+      return res.redirect(
+        ['https://', req.get('Host'), req.url].join('')
+      );
+    }
+    next();
+  }
+};
 app.use(express.static('./dist/persion-project-one'));
 
-app.get('/*', function(req, res) {
-  res.sendFile('index.html', {root: 'dist/persion-project-one/'}
-);
+app.get('/*', function (req, res) {
+  res.sendFile(path.join(__dirname,'/dist/persion-project-one/index.html'));
 });
-app.listen(process.env.PORT || 8080);
+
+app.use(forceSSL());
+
+app.listen(process.env.PORT || 4200);
