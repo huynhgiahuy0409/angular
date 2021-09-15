@@ -2,15 +2,16 @@
   "name": "persion-project-one",
   "version": "0.0.0",
   "engines": {
-    "node": "16.x",
-    "npm": "7.x"
+    "node": "16.2.0",
+    "npm": "7.13.0"
   },
   "scripts": {
     "ng": "ng",
     "start": "node server.js",
     "build": "ng build — aot — prod",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "heroku-postbuild": "ng build --prod"
   },
   "private": true,
   "dependencies": {
